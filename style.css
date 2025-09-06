@@ -156,14 +156,14 @@ body {
 .profession-text {
     font-size: 1.9rem; 
     font-weight: 400;
-    color: var(--accent-color);
+    color: var(--text-primary);
     margin-top: 0.5rem;
     height: 1.5em; 
 }
 
 .profile-bio {
     font-size: 1.2rem; 
-    color: var(--text-secondary);
+    color: var(--text-secondary); /* Might need to make this darker later */
     line-height: 1.8;
     margin-top: 1.5rem;
 }
