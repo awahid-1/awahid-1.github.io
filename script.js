@@ -1,47 +1,74 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    const sections = document.querySelectorAll('.content-section');
-    const navLinks = document.querySelectorAll('.main-nav a');
+    // Image and Profession Swapper
+    const images = document.querySelectorAll('.hero-image');
+    const professions = ['Accountant', 'Entrepreneur'];
+    const professionText = document.querySelector('.profession-text');
+    let currentImageIndex = 0;
+    let currentProfessionIndex = 0;
 
-    // Intersection Observer for fade-in effect on scroll
-    const sectionObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, { threshold: 0.1 });
+    function swapContent() {
+        // Swap image
+        //images[currentImageIndex].classList.remove('active');
+        //currentImageIndex = (currentImageIndex + 1) % images.length;
+        //images[currentImageIndex].classList.add('active');
 
-    sections.forEach(section => {
-        sectionObserver.observe(section);
-    });
+        // Swap profession
+        currentProfessionIndex = (currentProfessionIndex + 1) % professions.length;
+        professionText.textContent = professions[currentProfessionIndex];
+    }
 
-    // Intersection Observer for updating active nav link
-    const navObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href').substring(1) === entry.target.id) {
-                        link.classList.add('active');
-                    }
-                });
-            }
-        });
-    }, { rootMargin: "-50% 0px -50% 0px" });
-
-    sections.forEach(section => {
-        navObserver.observe(section);
-    });
+    setInterval(swapContent, 4000); // Change every 4 seconds
 
     // Smooth scroll for nav links
+    const navLinks = document.querySelectorAll('.top-nav a[href^="#"]');
+
     navLinks.forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                const offsetTop = targetElement.offsetTop - 80; // Offset for fixed nav height - looks nice :)
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
         });
     });
+
+    // Navbar scroll effect
+    const nav = document.querySelector('.top-nav');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) { // Activates when scrolled more than 50px
+            nav.classList.add('nav-scrolled');
+        } else {
+            nav.classList.remove('nav-scrolled');
+        }
+    });
+
+    // Active nav link on scroll
+    const sections = document.querySelectorAll('section[id], header[id]');
+    const navLi = document.querySelectorAll('.top-nav ul li a');
+    
+    window.addEventListener('scroll', ()=> {
+        let current = '';
+        sections.forEach( section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if(pageYOffset >= (sectionTop - sectionHeight / 3)){
+                current = section.getAttribute('id');
+            }
+        })
+
+        navLi.forEach( a => {
+            a.classList.remove('active');
+            if(a.getAttribute('href').substring(1) == current){
+                a.classList.add('active');
+            }
+        })
+    })
 
 });
